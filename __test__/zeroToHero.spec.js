@@ -65,3 +65,47 @@ test("spying using mock implementation", () => {
   spy.mockRestore();
   expect(pizza.name("Cheese")).toBe("Pizza Name: Cheese");
 });
+
+test("pizza returns new york last", () => {
+  const pizza1 = pizzas[0];
+  const pizza2 = pizzas[1];
+  const pizza3 = pizzas[2];
+  const pizza = jest.fn((currentPizza) => currentPizza.name);
+
+  pizza(pizza1); // Chicago Pizza
+  pizza(pizza2); // neopolitan Pizza
+  pizza(pizza3); // new york Pizza
+
+  expect(pizza).toHaveLastReturnedWith("New York Pizza");
+});
+
+// Data matching.....
+test("pizza data has new york data and matches object", () => {
+  const newYorkPizza = {
+    id: 3,
+    name: "New York Pizza",
+    image: "/images/ny-pizza.jpg",
+    desc:
+      "New York-style pizza has slices that are large and wide with a thin crust that is foldable yet crispy. It is traditionally topped with tomato sauce and mozzarella cheese.",
+    price: 8,
+  };
+  expect(pizzas[2]).toMatchObject(newYorkPizza);
+});
+
+test("expect a promise to resolve", async () => {
+  const user = {
+    getFullName: jest.fn(() => Promise.resolve("Paul Thomas")),
+  };
+  await expect(user.getFullName("Paul Thomas")).resolves.toBe("Paul Thomas");
+});
+
+test("expect a promise to reject", async () => {
+  const user = {
+    getFullName: jest.fn(() =>
+      Promise.reject(new Error("Something went wrong"))
+    ),
+  };
+  await expect(user.getFullName("Paul Thomas")).rejects.toThrow(
+    "Something went wrong"
+  );
+});
